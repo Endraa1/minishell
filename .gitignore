@@ -1,0 +1,7 @@
+build/
+minishell
+*.o
+*.d
+*.dSYM/
+.vscode/
+.idea/

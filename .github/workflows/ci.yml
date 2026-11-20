@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install valgrind
+        run: sudo apt-get update && sudo apt-get install -y valgrind
+      - name: Build
+        run: make CC=${{ matrix.cc }}
+      - name: Test
+        run: make test CC=${{ matrix.cc }}
+      - name: Memory check (valgrind)
+        run: make memcheck CC=${{ matrix.cc }}
+
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with ASan + UBSan and test
+        run: make test-asan
